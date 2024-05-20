@@ -1,0 +1,4 @@
+FROM registry.fedoraproject.org/fedora:latest
+RUN dnf clean all
+RUN dnf install -y ansible-core figlet openssh-clients
+RUN dnf update -y
