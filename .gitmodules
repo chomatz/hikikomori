@@ -1,3 +1,6 @@
 [submodule "roles/number_cruncher"]
 	path = roles/number_cruncher
 	url = git@github.com:chomatz/number_cruncher.git
+[submodule "roles/boot_loader"]
+	path = roles/boot_loader
+	url = git@github.com:chomatz/boot_loader.git
