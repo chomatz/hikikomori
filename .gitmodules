@@ -4,3 +4,6 @@
 [submodule "roles/boot_loader"]
 	path = roles/boot_loader
 	url = git@github.com:chomatz/boot_loader.git
+[submodule "roles/remote_management"]
+	path = roles/remote_management
+	url = git@github.com:chomatz/remote_management.git
