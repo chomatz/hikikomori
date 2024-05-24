@@ -7,3 +7,6 @@
 [submodule "roles/remote_management"]
 	path = roles/remote_management
 	url = git@github.com:chomatz/remote_management.git
+[submodule "roles/time_synchronization"]
+	path = roles/time_synchronization
+	url = git@github.com:chomatz/time_synchronization.git
