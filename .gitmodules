@@ -10,3 +10,6 @@
 [submodule "roles/time_synchronization"]
 	path = roles/time_synchronization
 	url = git@github.com:chomatz/time_synchronization.git
+[submodule "roles/system_information"]
+	path = roles/system_information
+	url = git@github.com:chomatz/system_information.git
