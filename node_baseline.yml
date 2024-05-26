@@ -5,7 +5,7 @@
 
   tasks:
 
-    - name: configure baseline configuration
+    - name: deploy baseline configuration
       ansible.builtin.include_role:
         name: number_cruncher
         tasks_from: baseline.yml
