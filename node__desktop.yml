@@ -1,7 +1,7 @@
 ---
 
 - name: deploy baseline configuration
-  ansible.builtin.import_playbook: node_baseline.yml
+  ansible.builtin.import_playbook: node__baseline.yml
 
 - name: desktop configuration
   hosts: "{{ nodes }}"
