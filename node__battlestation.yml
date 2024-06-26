@@ -1,19 +1,19 @@
 ---
 
-- name: deploy baseline configuration
+- name: deploy base desktop configuration
   ansible.builtin.import_playbook: node__desktop.yml
 
-- name: desktop configuration
+- name: deploy custom desktop configuration
   hosts: "{{ nodes }}"
 
   tasks:
 
-    - name: deploy desktop environment
+    - name: install steam
       ansible.builtin.include_role:
         name: linux_gaming
         tasks_from: steam_install.yml
 
-    - name: deploy desktop environment
+    - name: allow running steam via sudo
       ansible.builtin.include_role:
         name: linux_gaming
         tasks_from: steam_sudo.yml
