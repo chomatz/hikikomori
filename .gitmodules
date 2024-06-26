@@ -16,3 +16,6 @@
 [submodule "roles/desktop_environment"]
 	path = roles/desktop_environment
 	url = git@github.com:chomatz/desktop_environment.git
+[submodule "roles/linux_gaming"]
+	path = roles/linux_gaming
+	url = git@github.com:chomatz/linux_gaming.git
