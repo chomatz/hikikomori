@@ -19,3 +19,6 @@
 [submodule "roles/linux_gaming"]
 	path = roles/linux_gaming
 	url = git@github.com:chomatz/linux_gaming.git
+[submodule "roles/rpm_fusion"]
+	path = roles/rpm_fusion
+	url = git@github.com:chomatz/rpm_fusion.git
