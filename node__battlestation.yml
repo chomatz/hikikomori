@@ -23,4 +23,9 @@
         name: linux_gaming
         tasks_from: xone_driver.yml
 
+    - name: install powerline
+      ansible.builtin.include_role:
+        name: cli_customization
+        tasks_from: powerline_install.yml
+
 ...
