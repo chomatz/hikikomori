@@ -22,3 +22,9 @@
 [submodule "roles/rpm_fusion"]
 	path = roles/rpm_fusion
 	url = git@github.com:chomatz/rpm_fusion.git
+[submodule "roles/cli_customization"]
+	path = roles/cli_customization
+	url = git@github.com:chomatz/cli_customization.git
+[submodule "roles/text_editor"]
+	path = roles/text_editor
+	url = git@github.com:chomatz/text_editor.git
