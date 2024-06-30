@@ -8,6 +8,83 @@
 
   tasks:
 
+    - name: install vim
+      ansible.builtin.package:
+        name: vim-enhanced
+        state: present
+
+    - name: initialize vimrc generator
+      ansible.builtin.include_role:
+        name: text_editor
+        tasks_from: vimrc_template.yml
+
+    - name: add custom variable(s) to vimrc generator
+      ansible.builtin.include_role:
+        name: text_editor
+        tasks_from: vimrc_injector.yml
+      vars:
+        vimrc_label: custom
+        vimrc_type: variable
+        vimrc_content: |
+          plugin=(
+            "https://github.com/tpope/vim-fugitive.git"
+            "https://github.com/Yggdroot/indentLine.git"
+          )
+          config_baseline=(
+            "set mouse-=a"
+            "set cursorcolumn"
+            "highlight CursorColumn ctermbg=black"
+            "set cursorline"
+            "highlight CursorLine cterm=none ctermbg=black"
+            "set tabstop=4"
+            "set softtabstop=0 noexpandtab"
+            "set shiftwidth=4"
+            "set foldmethod=indent"
+            "set foldlevelstart=9999"
+            "set list lcs=tab:\|\ "
+            "set number"
+            "nnoremap <space> za"
+            "syntax on"
+          )
+          config_indentLine=(
+            "autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab"
+            "let g:indentLine_char = '|'"
+            "nnoremap <tab> :IndentLinesToggle <bar> :set number! <bar> :set list!<CR>"
+          )
+
+    - name: add custom script(s) to vimrc generator
+      ansible.builtin.include_role:
+        name: text_editor
+        tasks_from: vimrc_injector.yml
+      vars:
+        vimrc_label: custom
+        vimrc_type: script
+        vimrc_content: |
+          for configuration in ${config_baseline[*]}; do
+            grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
+          done
+          for repository in ${plugin[*]}; do
+            vendor=$(echo "$repository" | cut -d "/" -f 4)
+            project=$(echo "$repository" | cut -d "/" -f 5 | cut -d "." -f 1)
+            download=~/.vim/pack/$vendor/start/$project
+            if [ ! -d "$download" -a ! -f "$download" ]; then
+              git clone "$repository" "$download"
+              vim -u NONE -c "helptags  $download/doc" -c "q"
+              project_config="config_${project}"
+              if [ -v "$project_config" ]; then
+                array_config="${project_config}[@]"
+                for configuration in ${!array_config}; do
+                  grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
+                done
+              fi
+            fi
+          done
+
+    - name: install powerline
+      ansible.builtin.include_role:
+        name: cli_customization
+        tasks_from: powerline_install.yml
+
     - name: install steam
       ansible.builtin.include_role:
         name: linux_gaming
@@ -22,10 +99,5 @@
       ansible.builtin.include_role:
         name: linux_gaming
         tasks_from: xone_driver.yml
-
-    - name: install powerline
-      ansible.builtin.include_role:
-        name: cli_customization
-        tasks_from: powerline_install.yml
 
 ...
