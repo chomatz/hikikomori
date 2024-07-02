@@ -8,96 +8,184 @@
 
   tasks:
 
-    - name: install vim
-      ansible.builtin.package:
-        name: vim-enhanced
-        state: present
-
-    - name: initialize vimrc generator
-      ansible.builtin.include_role:
-        name: text_editor
-        tasks_from: vimrc_template.yml
-
-    - name: add custom variable(s) to vimrc generator
-      ansible.builtin.include_role:
-        name: text_editor
-        tasks_from: vimrc_injector.yml
-      vars:
-        vimrc_label: custom
-        vimrc_type: variable
-        vimrc_content: |
-          plugin=(
-            "https://github.com/tpope/vim-fugitive.git"
-            "https://github.com/Yggdroot/indentLine.git"
-          )
-          config_baseline=(
-            "set mouse-=a"
-            "set cursorcolumn"
-            "highlight CursorColumn ctermbg=black"
-            "set cursorline"
-            "highlight CursorLine cterm=none ctermbg=black"
-            "set tabstop=4"
-            "set softtabstop=0 noexpandtab"
-            "set shiftwidth=4"
-            "set foldmethod=indent"
-            "set foldlevelstart=9999"
-            "set list lcs=tab:\|\ "
-            "set number"
-            "nnoremap <space> za"
-            "syntax on"
-          )
-          config_indentLine=(
-            "autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab"
-            "let g:indentLine_char = '|'"
-            "nnoremap <tab> :IndentLinesToggle <bar> :set number! <bar> :set list!<CR>"
-          )
-
-    - name: add custom script(s) to vimrc generator
-      ansible.builtin.include_role:
-        name: text_editor
-        tasks_from: vimrc_injector.yml
-      vars:
-        vimrc_label: custom
-        vimrc_type: script
-        vimrc_content: |
-          for configuration in ${config_baseline[*]}; do
-            grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
-          done
-          for repository in ${plugin[*]}; do
-            vendor=$(echo "$repository" | cut -d "/" -f 4)
-            project=$(echo "$repository" | cut -d "/" -f 5 | cut -d "." -f 1)
-            download=~/.vim/pack/$vendor/start/$project
-            if [ ! -d "$download" -a ! -f "$download" ]; then
-              git clone "$repository" "$download"
-              vim -u NONE -c "helptags  $download/doc" -c "q"
-              project_config="config_${project}"
-              if [ -v "$project_config" ]; then
-                array_config="${project_config}[@]"
-                for configuration in ${!array_config}; do
-                  grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
-                done
-              fi
-            fi
-          done
-
-    - name: install powerline
-      ansible.builtin.include_role:
-        name: cli_customization
-        tasks_from: powerline_install.yml
-
-    - name: install steam
+    - name: disable steam deck readonly protection
       ansible.builtin.include_role:
         name: linux_gaming
-        tasks_from: steam_install.yml
+        tasks_from: steam_deck_readonly_toggle.yml
 
-    - name: allow running steam via sudo
+    - name: initialize steam deck repositories
       ansible.builtin.include_role:
         name: linux_gaming
-        tasks_from: steam_sudo.yml
+        tasks_from: steam_deck_repository.yml
 
-    - name: install xone dongle/gamepad driver
-      ansible.builtin.include_role:
-        name: linux_gaming
-        tasks_from: xone_driver.yml
+    - name: ensure tasks run only on selected os releases
+      block:
+
+        - name: install vim
+          ansible.builtin.package:
+            name:
+              - git
+              - vim
+            state: present
+          when:
+            - ansible_distribution == "Archlinux"
+            - ansible_distribution_release == "holo"
+
+        - name: install vim
+          ansible.builtin.package:
+            name:
+              - git-core
+              - vim-enhanced
+            state: present
+          when: ansible_distribution == "Fedora"
+
+        - name: initialize vimrc generator
+          ansible.builtin.include_role:
+            name: text_editor
+            tasks_from: vimrc_template.yml
+
+        - name: add custom variable(s) to vimrc generator
+          ansible.builtin.include_role:
+            name: text_editor
+            tasks_from: vimrc_injector.yml
+          vars:
+            vimrc_label: custom
+            vimrc_type: variable
+            vimrc_content: |
+              plugin=(
+                "https://github.com/tpope/vim-fugitive.git"
+                "https://github.com/Yggdroot/indentLine.git"
+              )
+              config_baseline=(
+                "set mouse-=a"
+                "set cursorcolumn"
+                "highlight CursorColumn ctermbg=black"
+                "set cursorline"
+                "highlight CursorLine cterm=none ctermbg=black"
+                "set tabstop=4"
+                "set softtabstop=0 noexpandtab"
+                "set shiftwidth=4"
+                "set foldmethod=indent"
+                "set foldlevelstart=9999"
+                "set list lcs=tab:\|\ "
+                "set number"
+                "nnoremap <space> za"
+                "syntax on"
+              )
+              config_indentLine=(
+                "autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab"
+                "let g:indentLine_char = '|'"
+                "nnoremap <tab> :IndentLinesToggle <bar> :set number! <bar> :set list!<CR>"
+              )
+
+        - name: add custom script(s) to vimrc generator
+          ansible.builtin.include_role:
+            name: text_editor
+            tasks_from: vimrc_injector.yml
+          vars:
+            vimrc_label: custom
+            vimrc_type: script
+            vimrc_content: |
+              for configuration in ${config_baseline[*]}; do
+                grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
+              done
+              for repository in ${plugin[*]}; do
+                vendor=$(echo "$repository" | cut -d "/" -f 4)
+                project=$(echo "$repository" | cut -d "/" -f 5 | cut -d "." -f 1)
+                download=~/.vim/pack/$vendor/start/$project
+                if [ ! -d "$download" -a ! -f "$download" ]; then
+                  git clone "$repository" "$download"
+                  vim -u NONE -c "helptags  $download/doc" -c "q"
+                  project_config="config_${project}"
+                  if [ -v "$project_config" ]; then
+                    array_config="${project_config}[@]"
+                    for configuration in ${!array_config}; do
+                      grep -qxF "$configuration" "$out_file" || echo "$configuration" >> "$out_file"
+                    done
+                  fi
+                fi
+              done
+
+        - name: install powerline
+          ansible.builtin.include_role:
+            name: cli_customization
+            tasks_from: powerline_install.yml
+
+        - name: fedora specific tasks
+          block:
+
+            - name: configure anydesk repository
+              ansible.builtin.yum_repository:
+                name: anydesk
+                description: AnyDesk Fedora - stable
+                file: fedora-anydesk.repo
+                baseurl: http://rpm.anydesk.com/rhel/8/$basearch/
+                gpgkey: https://keys.anydesk.com/repos/RPM-GPG-KEY
+                gpgcheck: true
+                repo_gpgcheck: true
+                metadata_expire: 21600
+
+            - name: install anydesk
+              ansible.builtin.package:
+                name: anydesk
+                state: present
+
+            - name: enable spotify repository
+              ansible.builtin.command:
+                cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
+
+            - name: install spotify
+              ansible.builtin.package:
+                name: spotify-client
+                state: present
+
+            - name: enable vivaldi repository
+              ansible.builtin.yum_repository:
+                name: vivaldi
+                description: vivaldi web browser
+                baseurl: "https://repo.vivaldi.com/stable/rpm/x86_64"
+                enabled: true
+                gpgcheck: true
+                gpgkey: "https://repo.vivaldi.com/stable/linux_signing_key.pub"
+
+            - name: install vivaldi browser
+              ansible.builtin.package:
+                name: vivaldi-stable
+                state: latest
+
+            - name: install viber
+              ansible.builtin.package:
+                name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+                state: present
+                disable_gpg_check: true
+
+            - name: install desktop application(s)
+              ansible.builtin.package:
+                name:
+                  - electrum
+                  - firefox
+                  - "@LibreOffice"
+                state: present
+
+            - name: install steam
+              ansible.builtin.include_role:
+                name: linux_gaming
+                tasks_from: steam_install.yml
+
+            - name: allow running steam via sudo
+              ansible.builtin.include_role:
+                name: linux_gaming
+                tasks_from: steam_sudo.yml
+
+            - name: install xone dongle/gamepad driver
+              ansible.builtin.include_role:
+                name: linux_gaming
+                tasks_from: xone_driver.yml
+
+          when: ansible_distribution == "Fedora"
+
+      when: >
+        (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
+        ansible_distribution == "Fedora"
 
 ...
