@@ -118,7 +118,7 @@
               ansible.builtin.yum_repository:
                 name: anydesk
                 description: AnyDesk Fedora - stable
-                file: fedora-anydesk.repo
+                file: fedora-anydesk
                 baseurl: http://rpm.anydesk.com/rhel/8/$basearch/
                 gpgkey: https://keys.anydesk.com/repos/RPM-GPG-KEY
                 gpgcheck: true
