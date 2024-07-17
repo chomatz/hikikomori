@@ -13,7 +13,7 @@ ansible-navigator:
     environment-variables:
       set:
         ANSIBLE_STDOUT_CALLBACK: yaml
-    image: localhost/ansible:latest
+    image: localhost/hikikomori:latest
     pull:
       policy: missing
   logging:
