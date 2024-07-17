@@ -28,3 +28,6 @@
 [submodule "roles/text_editor"]
 	path = roles/text_editor
 	url = git@github.com:chomatz/text_editor.git
+[submodule "roles/linux_virtualization"]
+	path = roles/linux_virtualization
+	url = git@github.com:chomatz/linux_virtualization.git
