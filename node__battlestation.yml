@@ -182,6 +182,18 @@
                 name: linux_gaming
                 tasks_from: xone_driver.yml
 
+            - name: install qemu-kvm
+              ansible.builtin.include_role:
+                name: linux_virtualization
+                tasks_from: kvm.yml
+
+            - name: configure kvm bridge on default network interface
+              ansible.builtin.include_role:
+                name: linux_virtualization
+                tasks_from: default_bridge.yml
+              vars:
+                enable_network_bridge: true
+
           when: ansible_distribution == "Fedora"
 
       when: >
