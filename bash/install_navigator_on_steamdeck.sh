@@ -6,4 +6,4 @@ sudo pacman -Syu fuse-overlayfs podman python-pip
 sudo steamos-readonly enable
 
 # install ansible-navigator
-python3 -m pip install ansible-navigator --user
+python3 -m pip install ansible-navigator --user --break-system-packages
