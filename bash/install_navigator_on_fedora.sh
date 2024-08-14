@@ -1,4 +1,4 @@
-#!/bin/env/bash
+#!/bin/env bash
 
 # install required packages
 sudo dnf install -y fuse-overlayfs podman python-pip

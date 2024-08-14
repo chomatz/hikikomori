@@ -1,4 +1,4 @@
-#!/bin/env/bash
+#!/bin/env bash
 
 # install required packages
 sudo steamos-readonly disable
