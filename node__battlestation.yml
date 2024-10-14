@@ -139,20 +139,6 @@
                 name: spotify-client
                 state: present
 
-            - name: enable vivaldi repository
-              ansible.builtin.yum_repository:
-                name: vivaldi
-                description: vivaldi web browser
-                baseurl: "https://repo.vivaldi.com/stable/rpm/x86_64"
-                enabled: true
-                gpgcheck: true
-                gpgkey: "https://repo.vivaldi.com/stable/linux_signing_key.pub"
-
-            - name: install vivaldi browser
-              ansible.builtin.package:
-                name: vivaldi-stable
-                state: latest
-
             - name: install viber
               ansible.builtin.package:
                 name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
