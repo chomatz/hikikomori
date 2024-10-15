@@ -21,5 +21,5 @@ done
 
 echo "---------- checking main repository ----------"
 if [ "$(git branch --show-current)" == "base" ]; then
-	push branches
+	push_branches
 fi
