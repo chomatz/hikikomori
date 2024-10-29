@@ -68,6 +68,7 @@
                 "set foldmethod=indent"
                 "set foldlevelstart=9999"
                 "set list lcs=tab:\|\ "
+                "let g:markdown_syntax_conceal=0"
                 "set number"
                 "nnoremap <space> za"
                 "syntax on"
