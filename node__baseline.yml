@@ -3,17 +3,19 @@
 - name: baseline configuration
   hosts: "{{ nodes }}"
 
-  tasks:
+  pre_tasks:
 
     - name: disable steam deck readonly protection
       ansible.builtin.include_role:
         name: linux_gaming
-        tasks_from: steam_deck_readonly_toggle.yml
+        tasks_from: steam_deck_readonly_disable.yml
 
     - name: initialize steam deck repositories
       ansible.builtin.include_role:
         name: linux_gaming
         tasks_from: steam_deck_repository.yml
+
+  tasks:
 
     - name: deploy baseline configuration
       ansible.builtin.include_role:
@@ -21,5 +23,12 @@
         tasks_from: baseline.yml
       vars:
         fqdn_hostname: false
+
+  post_tasks:
+
+    - name: enable steam deck readonly protection
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: steam_deck_readonly_enable.yml
 
 ...

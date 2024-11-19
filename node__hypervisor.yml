@@ -3,12 +3,12 @@
 - name: baseline configuration
   hosts: "{{ nodes }}"
 
-  tasks:
+  pre_tasks:
 
     - name: disable steam deck readonly protection
       ansible.builtin.include_role:
         name: linux_gaming
-        tasks_from: steam_deck_readonly_toggle.yml
+        tasks_from: steam_deck_readonly_disable.yml
 
     - name: initialize steam deck repositories
       ansible.builtin.include_role:
@@ -22,6 +22,8 @@
       vars:
         fqdn_hostname: false
 
+  tasks:
+
     - name: install qemu-kvm
       ansible.builtin.include_role:
         name: linux_virtualization
@@ -33,5 +35,12 @@
         tasks_from: default_bridge.yml
       vars:
         enable_network_bridge: true
+
+  post_tasks:
+
+    - name: enable steam deck readonly protection
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: steam_deck_readonly_enable.yml
 
 ...
