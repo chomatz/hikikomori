@@ -6,17 +6,19 @@
 - name: deploy custom desktop configuration
   hosts: "{{ nodes }}"
 
-  tasks:
+  pre_tasks:
 
     - name: disable steam deck readonly protection
       ansible.builtin.include_role:
         name: linux_gaming
-        tasks_from: steam_deck_readonly_toggle.yml
+        tasks_from: steam_deck_readonly_disable.yml
 
     - name: initialize steam deck repositories
       ansible.builtin.include_role:
         name: linux_gaming
         tasks_from: steam_deck_repository.yml
+
+  tasks:
 
     - name: ensure tasks run only on selected os releases
       block:
@@ -186,5 +188,12 @@
       when: >
         (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
         ansible_distribution == "Fedora"
+
+  post_tasks:
+
+    - name: enable steam deck readonly protection
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: steam_deck_readonly_enable.yml
 
 ...
