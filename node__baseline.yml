@@ -5,15 +5,9 @@
 
   pre_tasks:
 
-    - name: disable steam deck readonly protection
-      ansible.builtin.include_role:
-        name: linux_gaming
-        tasks_from: steam_deck_readonly_disable.yml
-
-    - name: initialize steam deck repositories
-      ansible.builtin.include_role:
-        name: linux_gaming
-        tasks_from: steam_deck_repository.yml
+    - name: source pre-playbook tasks
+      ansible.builtin.include_tasks:
+        file: task__pre.yml
 
   tasks:
 
@@ -26,9 +20,8 @@
 
   post_tasks:
 
-    - name: enable steam deck readonly protection
-      ansible.builtin.include_role:
-        name: linux_gaming
-        tasks_from: steam_deck_readonly_enable.yml
+    - name: source post-playbook tasks
+      ansible.builtin.include_tasks:
+        file: task__post.yml
 
 ...
