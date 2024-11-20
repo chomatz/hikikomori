@@ -1,0 +1,8 @@
+---
+
+- name: enable steam deck readonly protection
+  ansible.builtin.include_role:
+    name: linux_gaming
+    tasks_from: steam_deck_readonly_enable.yml
+
+...
