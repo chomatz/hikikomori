@@ -1,4 +1,6 @@
-collections/ansible_collections
+collections/*
+!collections/COLLECTIONS.md
+!collections/requirements.yml
 inv__*
 !inv__sample.yml
 keys/ssh/*
