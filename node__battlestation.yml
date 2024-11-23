@@ -108,7 +108,7 @@
             name: cli_customization
             tasks_from: powerline_install.yml
 
-        - name: fedora specific tasks
+        - name: ensure tasks run only on selected os releases
           block:
 
             - name: configure anydesk repository
