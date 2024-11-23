@@ -130,6 +130,16 @@
             - name: enable spotify repository
               ansible.builtin.command:
                 cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
+              when:
+              - ansible_distribution == "Fedora"
+              - ansible_distribution_major_version < "41"
+
+            - name: enable spotify repository
+              ansible.builtin.command:
+                cmd: dnf config-manager addrepo --overwrite --from-repofile=https://negativo17.org/repos/fedora-spotify.repo
+              when:
+              - ansible_distribution == "Fedora"
+              - ansible_distribution_major_version >= "41"
 
             - name: install spotify
               ansible.builtin.package:
