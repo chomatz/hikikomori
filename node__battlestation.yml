@@ -61,10 +61,22 @@
                   vim.opt.foldlevelstart = 9999
 
                   -- keymap setting(s)
+                  -- toggle visual aids
                   vim.keymap.set("n", "<tab>", ":set number! <bar> :set list!<CR>")
+                  -- toggle folds
                   vim.keymap.set("n", "<space>", "za")
+                  -- move to prev buffer
                   vim.keymap.set("n", "<c-right>", ":BufferLineCycleNext<CR>")
+                  -- move to next buffer
                   vim.keymap.set("n", "<c-left>", ":BufferLineCyclePrev<CR>")
+                  -- split - move to left
+                  vim.keymap.set("n", "<c-s-left>", "<c-w>h")
+                  -- split - move to right
+                  vim.keymap.set("n", "<c-s-right>", "<c-w>l")
+                  -- split - move to top
+                  vim.keymap.set("n", "<c-s-up>", "<c-w>k")
+                  -- split - move to bottom
+                  vim.keymap.set("n", "<c-s-down>", "<c-w>j")
 
                   -- mouse setting(s)
                   vim.opt.mouse = ""
