@@ -233,7 +233,7 @@
               # statusline defaults
               set -g status-interval 1
               set -g status-position top
-              set -g default-terminal "tmux-256color"
+              set -g default-terminal tmux-256color
               set -g status-fg color255
               set -g status-style bg=default
 
@@ -242,22 +242,23 @@
               set -g renumber-windows on
 
               # pane border
-              set -g pane-border-style fg=color29
-              set -g pane-active-border-style "fg=color31"
+              set -g pane-border-style fg=color255
+              set -g pane-active-border-style fg=color98
 
               # left area
               set -g status-left-length 100
-              set -g status-left "#[fg=color29] 󰍹 #H"
-              set -ag status-left "#[fg=color31]  #{pane_current_path}"
+              set -g status-left "#[fg=color98]  #S "
+              set -ag status-left "#[fg=color31] 󰍹 #H "
+              set -ag status-left "#[fg=color255]  "
 
               # right area
               set -g status-right-length 100
-              set -g status-right "#[fg=color134] %a %b %d "
-              set -ag status-right "#[fg=color98] %H:%M"
+              set -g status-right "#[fg=color37] #[fg=color255]%a %b %d %Y "
+              set -ag status-right "#[fg=color37] #[fg=color255]%H:%M"
 
               # middle area
-              set -g window-status-format "#[fg=color33]  #I|#W"
-              set -g window-status-current-format "#[fg=color99]  #I|#W"
+              set -g window-status-format "#[fg=color255]#I:#W"
+              set -g window-status-current-format "#[fg=color166]#I:#W"
 
         - name: ensure tasks run only on selected os releases
           block:
