@@ -8,16 +8,18 @@ push_branches () {
 	git checkout base
 }
 
-for submodule in roles/*; do
-	if [ -d "$submodule" ]; then
-		cd "$submodule"
-		echo "---------- checking submodule [$submodule] ----------"
-		if [ "$(git branch --show-current)" == "base" ]; then
-			push_branches
+if [ -d roles ]; then
+	for submodule in roles/*; do
+		if [ -d "$submodule" ]; then
+			cd "$submodule"
+			echo "---------- checking submodule [$submodule] ----------"
+			if [ "$(git branch --show-current)" == "base" ]; then
+				push_branches
+			fi
+			cd ../..
 		fi
-		cd ../..
-	fi
-done
+	done
+fi
 
 echo "---------- checking main repository ----------"
 if [ "$(git branch --show-current)" == "base" ]; then
