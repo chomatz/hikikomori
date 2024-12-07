@@ -260,6 +260,41 @@
               set -g window-status-format "#[fg=color255]#I:#W"
               set -g window-status-current-format "#[fg=color166]#I:#W"
 
+        - name: deploy bash
+          ansible.builtin.include_role:
+            name: cli_customization
+            tasks_from: bash_deploy.yml
+          vars:
+            bash_config_generator: "/etc/profile.d/bash_config_generator.sh"
+            bash_custom_config: |
+              #-----autodelete_lines_below-----#
+              git_show_branch(){
+                  git_branch=\$(git branch --show-current 2> /dev/null)
+                  if [ "\$git_branch" != "" ]; then
+                      echo "\$(tput setaf 31)  \$git_branch"
+                  fi
+              }
+
+              session_check_jobs(){
+                  jobs_running=\$(jobs | wc -l)
+                  if [ "\$jobs_running" -ge 1 ]; then
+                      echo "\$(tput setaf 166)  \$jobs_running"
+                  fi
+              }
+
+              session_check_user(){
+                  if [ "\$UID" -eq 0 ]; then
+                      color=196
+                  elif [ "\$UID" -ge 1 ] && [ "\$UID" -lt 1000 ]; then
+                      color=166
+                  else
+                      color=98
+                  fi
+                  echo "\$(tput setaf \$color)  \u"
+              }
+
+              export PS1="\$(session_check_user)\\\$(git_show_branch)\\\$(tput setaf 37)  \w\\\$(session_check_jobs)\$(tput sgr0)\n "
+
         - name: ensure tasks run only on selected os releases
           block:
 
