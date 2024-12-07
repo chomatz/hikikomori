@@ -81,6 +81,10 @@
                   -- mouse setting(s)
                   vim.opt.mouse = ""
 
+                  -- split setting(s)
+                  vim.opt.splitbelow = true
+                  vim.opt.splitright = true
+
                   -- tab setting(s)
                   vim.opt.tabstop = 4
                   vim.opt.softtabstop = 0
