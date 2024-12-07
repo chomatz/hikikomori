@@ -63,6 +63,8 @@
                   -- keymap setting(s)
                   vim.keymap.set("n", "<tab>", ":set number! <bar> :set list!<CR>")
                   vim.keymap.set("n", "<space>", "za")
+                  vim.keymap.set("n", "<c-right>", ":BufferLineCycleNext<CR>")
+                  vim.keymap.set("n", "<c-left>", ":BufferLineCyclePrev<CR>")
 
                   -- mouse setting(s)
                   vim.opt.mouse = ""
