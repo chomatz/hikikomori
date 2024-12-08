@@ -5,4 +5,11 @@
     name: linux_gaming
     tasks_from: steam_deck_readonly_enable.yml
 
+- name: display post run message
+  ansible.builtin.debug:
+    var: post_run_message
+  when:
+    - post_run_message is defined
+    - post_run_message != ""
+
 ...
