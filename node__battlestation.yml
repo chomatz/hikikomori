@@ -17,6 +17,14 @@
     - name: ensure tasks run only on selected os releases
       block:
 
+        - name: install nerdfonts
+          ansible.builtin.include_role:
+            name: cli_customization
+            tasks_from: nerdfont_install.yml
+          vars:
+            font_name: sauce_code_pro
+            font_url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SourceCodePro.zip"
+
         - name: deploy neovim
           ansible.builtin.include_role:
             name: cli_customization
@@ -291,7 +299,7 @@
               git_show_branch(){
                   git_branch=\$(git branch --show-current 2> /dev/null)
                   if [ "\$git_branch" != "" ]; then
-                      echo "\$(tput setaf 31)  \$git_branch"
+                      echo "\$(tput setaf 166)  \$git_branch"
                   fi
               }
 
@@ -313,7 +321,7 @@
                   echo "\$(tput setaf \$color)  \u"
               }
 
-              export PS1="\$(session_check_user)\\\$(git_show_branch)\\\$(tput setaf 37)  \w\\\$(session_check_jobs)\$(tput sgr0)\n "
+              export PS1="\$(session_check_user) \$(tput setaf 31)󰍹 \h\\\$(git_show_branch)\$(tput setaf 37)  \w\\\$(session_check_jobs)\$(tput sgr0)\n "
 
         - name: ensure tasks run only on selected os releases
           block:
