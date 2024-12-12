@@ -11,5 +11,7 @@
   when:
     - post_run_message is defined
     - post_run_message != ""
+  delegate_to: localhost
+  run_once: true
 
 ...
