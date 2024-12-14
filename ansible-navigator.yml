@@ -1,10 +1,6 @@
 ---
 
 ansible-navigator:
-  ansible:
-    inventory:
-      entries:
-        - inv__nodes.yml
   execution-environment:
     container-engine: podman
     container-options:
