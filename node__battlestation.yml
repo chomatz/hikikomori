@@ -26,6 +26,13 @@
     - name: ensure tasks run only on selected os releases
       block:
 
+        - name: deploy wireguard
+          ansible.builtin.include_role:
+            name: vpn_tunnel
+            tasks_from: wireguard_deploy.yml
+          vars:
+            hide_secrets: false
+
         - name: install nerdfonts
           ansible.builtin.include_role:
             name: cli_customization

@@ -31,3 +31,6 @@
 [submodule "roles/linux_virtualization"]
 	path = roles/linux_virtualization
 	url = git@github.com:chomatz/linux_virtualization.git
+[submodule "roles/vpn_tunnel"]
+	path = roles/vpn_tunnel
+	url = git@github.com:chomatz/vpn_tunnel.git
