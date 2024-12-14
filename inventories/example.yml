@@ -1,0 +1,76 @@
+---
+
+all:
+
+  hosts:
+    host1.somedomain.net:
+      ansible_host: host1.fqdn.or.ip
+    host2.somedomain.net:
+      ansible_host: host2.fqdn.or.ip
+    host3.somedomain.net:
+      ansible_host: host3.fqdn.or.ip
+    host4.somedomain.net:
+      ansible_host: host4.fqdn.or.ip
+    host5.somedomain.net:
+      ansible_host: host5.fqdn.or.ip
+
+  children:
+
+    a_group_name:
+      hosts:
+        host1.somedomain.net:
+          grub_menu_resolution: 1920x1080
+        host2.somedomain.net:
+          grub_menu_resolution: 1920x1080
+          wireguard_ip: 41
+          wireguard_key_private: Host2wgPrivateKey
+          wireguard_key_public: Host2wgPublicKey
+        host3.somedomain.net:
+          wireguard_ip: 67
+          wireguard_key_private: Host3wgPrivateKey
+          wireguard_key_public: Host3wgPublicKey
+      vars:
+        wireguard:
+          - name: vpn_connection_1
+            device: wg0
+            local: |
+              Address = 192.16.2.{{ wireguard_ip }}/24
+              DNS = 192.168.1.2, 192.168.1.3
+            peer: |
+              PublicKey = RemoteHost1wgPublicKey
+              AllowedIPS = 192.168.2.0/24, 192.168.1.0/24
+              Endpoint = remotehost1.ip.or.fqdn:58008
+              PersistentKeepalive = 30
+          - name: vpn_connection_2
+            device: wg1
+            local: Address = 172.16.0.{{ wireguard_ip }}/24
+            peer: |
+              PublicKey = RemoteHost2wgPublicKey
+              AllowedIPS = 172.16.0.0/24, 10.0.0.0/8
+              Endpoint = remotehost2.ip.or.fqdn:80085
+              PersistentKeepalive = 30
+
+    another_group:
+      hosts:
+        host1.somedomain.net:
+        host2.somedomain.net:
+        host3.somedomain.net:
+        host4.somedomain.net:
+        host5.somedomain.net:
+      vars:
+        ansible_user: ansibleUserName
+        ansible_ssh_private_key_file: keys/ssh/private_key_file
+        ansible_become: true
+        ansible_become_method: sudo
+        ansible_become_pass: aVeryComplic@t3dPassw0rd
+
+    and_another:
+      hosts:
+        host4.somedomain.net:
+          max_charge_threshold: 50
+          min_charge_threshold: 45
+        host5.somedomain.net:
+          max_charge_threshold: 100
+          min_charge_threshold: 95
+
+...
