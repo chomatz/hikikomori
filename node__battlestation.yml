@@ -86,7 +86,7 @@
 
                   -- keymap setting(s)
                   -- toggle visual aids
-                  vim.keymap.set("n", "<tab>", ":set number! <bar> :set list!<CR>")
+                  vim.keymap.set("n", "<tab>", ":set number! <bar> :set list! <bar> :set cursorcolumn! <bar> :set cursorline! <CR>")
                   -- toggle folds
                   vim.keymap.set("n", "<space>", "za")
                   -- move to prev buffer
