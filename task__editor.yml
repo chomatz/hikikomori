@@ -36,6 +36,7 @@
               vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
               -- indicator setting(s)
+              vim.opt.guicursor = "n-v-c-i:block"
               vim.opt.cursorcolumn = true
               vim.opt.cursorline = true
               vim.opt.number = true
