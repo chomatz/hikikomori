@@ -4,6 +4,9 @@
   ansible.builtin.include_role:
     name: linux_gaming
     tasks_from: steam_deck_readonly_enable.yml
+  when:
+    - ansible_distribution == "Archlinux"
+    - ansible_distribution_release == "holo"
 
 - name: display post run message(s)
   ansible.builtin.debug:
