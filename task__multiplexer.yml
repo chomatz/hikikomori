@@ -1,55 +1,55 @@
 ---
 
-    - name: ensure tasks run only on selected os releases
-      block:
+- name: ensure tasks run only on selected os releases
+  block:
 
-        - name: deploy tmux
-          ansible.builtin.include_role:
-            name: cli_customization
-            tasks_from: tmux_deploy.yml
-          vars:
-            tmux_config_generator: "/etc/profile.d/tmux_config_generator.sh"
-            tmux_custom_config: |
-              # statusline defaults
-              set -g status-interval 1
-              set -g status-position top
-              set -g default-terminal tmux-256color
-              set -g status-fg color255
-              set -g status-style bg=default
+    - name: deploy tmux
+      ansible.builtin.include_role:
+        name: cli_customization
+        tasks_from: tmux_deploy.yml
+      vars:
+        tmux_config_generator: "/etc/profile.d/tmux_config_generator.sh"
+        tmux_custom_config: |
+          # statusline defaults
+          set -g status-interval 1
+          set -g status-position top
+          set -g default-terminal tmux-256color
+          set -g status-fg color255
+          set -g status-style bg=default
 
-              # window index
-              set -g base-index 1
-              set -g renumber-windows on
+          # window index
+          set -g base-index 1
+          set -g renumber-windows on
 
-              # pane border
-              set -g pane-border-style fg=color255
-              set -g pane-active-border-style fg=color98
+          # pane border
+          set -g pane-border-style fg=color255
+          set -g pane-active-border-style fg=color98
 
-              # left area
-              set -g status-left-length 100
-              set -g status-left "#[fg=color98]  #S "
-              set -ag status-left "#[fg=color31] 󰍹 #H "
-              set -ag status-left "#[fg=color255]  "
+          # left area
+          set -g status-left-length 100
+          set -g status-left "#[fg=color98]  #S "
+          set -ag status-left "#[fg=color31] 󰍹 #H "
+          set -ag status-left "#[fg=color255]  "
 
-              # right area
-              set -g status-right-length 100
-              set -g status-right "#[fg=color37] #[fg=color255]%a %b %d %Y "
-              set -ag status-right "#[fg=color37] #[fg=color255]%H:%M"
+          # right area
+          set -g status-right-length 100
+          set -g status-right "#[fg=color37] #[fg=color255]%a %b %d %Y "
+          set -ag status-right "#[fg=color37] #[fg=color255]%H:%M"
 
-              # middle area
-              set -g window-status-format "#[fg=color255]#I:#W"
-              set -g window-status-current-format "#[fg=color166]#I:#W"
+          # middle area
+          set -g window-status-format "#[fg=color255]#I:#W"
+          set -g window-status-current-format "#[fg=color166]#I:#W"
 
-        - name: set post run message
-          ansible.builtin.set_fact:
-            post_run_message: |
-              {{ post_run_message | default('') }}
-              ---------- to configure tmux ----------
-              | create the trigger file:
-              touch "$HOME/.customize_terminal_multiplexer"
+    - name: set post run message
+      ansible.builtin.set_fact:
+        post_run_message: |
+          {{ post_run_message | default('') }}
+          ---------- to configure tmux ----------
+          | create the trigger file:
+          touch "$HOME/.customize_terminal_multiplexer"
 
-      when: >
-        (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
-        ansible_distribution == "Fedora"
+  when: >
+    (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
+    ansible_distribution == "Fedora"
 
 ...
