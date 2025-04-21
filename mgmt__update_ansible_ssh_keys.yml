@@ -1,0 +1,63 @@
+---
+
+- name: generate keypair
+  hosts: "localhost"
+
+  vars:
+    keypair_passphrase: ""
+    keypair_type: ed25519
+
+  tasks:
+
+    - name: generate a keypair
+      community.crypto.openssh_keypair:
+        path: "/tmp/id_{{ keypair_type }}"
+        passphrase: "{{ keypair_passphrase }}"
+        type: "{{ keypair_type }}"
+      changed_when: false
+
+    - name: display the private key
+      ansible.builtin.debug:
+        msg: "{{ lookup('file', '/tmp/id_{{ keypair_type }}') }}"
+        verbosity: 1
+
+    - name: display the public key
+      ansible.builtin.debug:
+        msg: "{{ lookup('file', '/tmp/id_{{ keypair_type }}.pub') }}"
+        verbosity: 1
+
+    - name: store the private key
+      ansible.builtin.set_fact:
+        private_key: "{{ lookup('file', '/tmp/id_{{ keypair_type }}') }}"
+
+    - name: store the public key
+      ansible.builtin.set_fact:
+        public_key: "{{ lookup('file', '/tmp/id_{{ keypair_type }}.pub') }}"
+
+- name: "update authorized_keys"
+  hosts: "{{ nodes }}"
+
+  tasks:
+
+    - name: "append the public key to {{ ansible_user }}'s authorized_keys"
+      ansible.posix.authorized_key:
+        user: "{{ ansible_user }}"
+        state: present
+        key: "{{ hostvars.localhost.public_key }}"
+
+    - name: ensure that the following tasks run only on the ansible runner
+      block:
+
+        - name: display the private key
+          ansible.builtin.debug:
+            msg: "{{ hostvars.localhost.private_key }}"
+
+        - name: display the public key
+          ansible.builtin.debug:
+            msg: "{{ hostvars.localhost.public_key }}"
+
+      run_once: true
+      delegate_to: localhost
+
+
+...
