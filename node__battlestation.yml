@@ -89,11 +89,20 @@
                 name: spotify-client
                 state: present
 
-            - name: install viber
-              ansible.builtin.package:
-                name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
-                state: present
-                disable_gpg_check: true
+            - name: fix for libdnf issues when installing via urls
+              block:
+
+                - name: install viber
+                  ansible.builtin.package:
+                    name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+                    state: present
+                    disable_gpg_check: true
+
+              rescue:
+
+                - name: install viber via dnf
+                  ansible.builtin.command:
+                    cmd: "dnf install -y https://download.cdn.viber.com/desktop/Linux/viber.rpm"
 
             - name: install desktop application(s)
               ansible.builtin.package:
