@@ -89,6 +89,31 @@
                 name: spotify-client
                 state: present
 
+            - name: enable teams for linux repository
+              ansible.builtin.command:
+                cmd: dnf config-manager --add-repo=https://repo.teamsforlinux.de/rpm/teams-for-linux.repo
+              when:
+              - ansible_distribution_major_version < "41"
+
+            - name: enable teams for linux repository
+              ansible.builtin.command:
+                cmd: dnf config-manager addrepo --overwrite --from-repofile=https://repo.teamsforlinux.de/rpm/teams-for-linux.repo
+              when:
+              - ansible_distribution_major_version >= "41"
+
+            - name: add gpg keys for the teams for linux repository
+              ansible.builtin.lineinfile:
+                path: /etc/yum.repos.d/teams-for-linux.repo
+                state: present
+                regexp: "^gpgkey="
+                insertafter: "^gpgcheck="
+                line: "gpgkey=https://repo.teamsforlinux.de/teams-for-linux.asc"
+
+            - name: install teams for linux
+              ansible.builtin.package:
+                name: teams-for-linux
+                state: present
+
             - name: fix for libdnf issues when installing via urls
               block:
 
