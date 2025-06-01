@@ -56,6 +56,11 @@
         - name: ensure tasks run only on selected os releases
           block:
 
+            - name: disable zram
+              ansible.builtin.file:
+                path: /etc/systemd/zram-generator.conf
+                state: touch
+
             - name: configure anydesk repository
               ansible.builtin.yum_repository:
                 name: anydesk
