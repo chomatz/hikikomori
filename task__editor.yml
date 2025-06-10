@@ -79,6 +79,9 @@
               vim.opt.softtabstop = 0
               vim.opt.shiftwidth = 4
               vim.opt.expandtab = false
+
+              -- terminal setting(s)
+              vim.opt.shell = "bash"
           - name: "{{ nvim_dir_home }}/lua/{{ nvim_dir_config }}/lazy.lua"
             data: |
               -- Bootstrap lazy.nvim
