@@ -53,6 +53,10 @@
           ansible.builtin.include_tasks:
             file: task__shell.yml
 
+        - name: deploy system-wide known hosts keys
+          ansible.builtin.include_tasks:
+            file: task__ssh_keyscan.yml
+
         - name: ensure tasks run only on selected os releases
           block:
 

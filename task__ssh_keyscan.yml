@@ -1,0 +1,44 @@
+---
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: system-wide known hosts perparation
+      block:
+
+        - name: set keyfile file location
+          ansible.builtin.set_fact:
+            sys_known_hosts: /tmp/ssh_known_hosts
+          run_once: true
+
+        - name: initialize system-wide known hosts file
+          ansible.builtin.shell:
+            cmd: "cat /dev/null > {{ sys_known_hosts }}"
+          changed_when: false
+
+        - name: populate system-wide known hosts keys
+          ansible.builtin.shell:
+            cmd: "ssh-keyscan {{ inventory_hostname }} | grep -v ^\\# | sed -e 's/{{ inventory_hostname }}/{{ inventory_hostname_short }},{{ inventory_hostname }}/' >> {{ sys_known_hosts }}; echo >> {{ sys_known_hosts }}"
+          changed_when: false
+
+        - name: display system-wide known hosts file
+          ansible.builtin.debug:
+            msg: "{{ lookup('file', sys_known_hosts) }}"
+            verbosity: 1
+          run_once: true
+
+      delegate_to: localhost
+
+    - name: upload system-wide known hosts file
+      ansible.builtin.copy:
+        src: "{{ sys_known_hosts }}"
+        dest: /etc/ssh/ssh_known_hosts
+        owner: root
+        group: root
+        mode: "0644"
+
+  when: >
+    (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
+    ansible_distribution == "Fedora"
+
+...
