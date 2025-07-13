@@ -9,6 +9,11 @@
       ansible.builtin.include_tasks:
         file: task__pre.yml
 
+    - name: remove rescue kernel(s)
+      ansible.builtin.include_role:
+        name: boot_loader
+        tasks_from: remove_rescue_kernels.yml
+
     - name: deploy baseline configuration
       ansible.builtin.include_role:
         name: number_cruncher
