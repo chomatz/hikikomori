@@ -57,6 +57,40 @@
           ansible.builtin.include_tasks:
             file: task__ssh_keyscan.yml
 
+        - name: define additional packages
+          ansible.builtin.set_fact:
+            common_packages:
+              - unrar
+              - unzip
+
+        - name: define additional fedora packages
+          ansible.builtin.set_fact:
+            fedora_packages:
+              - p7zip
+          when: ansible_distribution == "Fedora"
+
+        - name: define additional steamos packages
+          ansible.builtin.set_fact:
+            steamos_packages:
+              - 7zip
+          when:
+            - ansible_distribution == "Archlinux"
+            - ansible_distribution_release == "holo"
+
+        - name: install additional fedora packages
+          ansible.builtin.package:
+            name: "{{ common_packages | community.general.lists_union(fedora_packages) }}"
+            state: present
+          when: ansible_distribution == "Fedora"
+
+        - name: install additional steamos packages
+          ansible.builtin.package:
+            name: "{{ common_packages | community.general.lists_union(steamos_packages) }}"
+            state: present
+          when:
+            - ansible_distribution == "Archlinux"
+            - ansible_distribution_release == "holo"
+
         - name: ensure tasks run only on selected os releases
           block:
 
