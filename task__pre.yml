@@ -51,7 +51,7 @@
         cmd: >
           sed
           -e 's/"flatpak", //'
-          -e 's/, \flatpak\//'
+          -e 's/, "flatpak"//'
           -e 's/"brew_cask", //'
           -e 's/, "brew_cask"//'
           -e 's/"brew_formula", //'
