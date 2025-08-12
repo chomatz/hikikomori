@@ -29,12 +29,6 @@
     var: os_id.stdout
     verbosity: 1
 
-- name: "ensure sudo via {{ ansible_user }} requires no password - ujust fix"
-  ansible.builtin.copy:
-    content: "{{ ansible_user }}	ALL=(ALL)	NOPASSWD: ALL"
-    dest: "/etc/sudoers.d/{{ ansible_user }}"
-  when: os_id.stdout == "bazzite"
-
 - name: create temporary work directory
   ansible.builtin.tempfile:
     state: directory
@@ -44,42 +38,68 @@
   vars:
     ansible_become: false
 
-- name: create temporary topgrade environment
+- name: bazzite fixes and work arounds
   block:
 
-    - name: get default topgrade configuration
-      ansible.builtin.shell:
-        cmd: "ujust --show update | grep topgrade | xargs | cut -d ' ' -f 3"
-      register: topgrade_config
+    # running topgrade as root will cause flatpak updates to fail
+    # for now system and firmware updates are done as root while
+    # flatpak, homebrew, and custom commands are done with user privs
+    # topgrade also requires password input for privilege escalation
 
-    - name: create topgrade root configuration
-      ansible.builtin.shell:
-        cmd: >
-          sed
-          -e 's/"flatpak", //'
-          -e 's/, "flatpak"//'
-          -e 's/"brew_cask", //'
-          -e 's/, "brew_cask"//'
-          -e 's/"brew_formula", //'
-          -e 's/, "brew_formula"//'
-          -e 's/"custom_commands", //'
-          -e 's/, "custom_commands"//'
-          {{ topgrade_config.stdout }} >
-          {{ ansible_work_dir.path }}/topgrade_root.toml
+    - name: "ensure sudo via {{ ansible_user }} requires no password"
+      ansible.builtin.copy:
+        content: "{{ ansible_user }}	ALL=(ALL)	NOPASSWD: ALL"
+        dest: "/etc/sudoers.d/{{ ansible_user }}"
 
-    - name: create topgrade user configuration
-      ansible.builtin.shell:
-        cmd: >
-          sed
-          -e 's/"system", //'
-          -e 's/, "system"//'
-          -e 's/"firmware", //'
-          -e 's/, "firmware"//'
-          {{ topgrade_config.stdout }} >
-          {{ ansible_work_dir.path }}/topgrade_user.toml
+    - name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
+      ansible.builtin.command:
+        cmd: "chown -R {{ ansible_user }}:{{ ansible_user }} /home/linuxbrew"
+
+    #- name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
+    #  ansible.builtin.file:
+    #    path: /home/linuxbrew
+    #    owner: "{{ ansible_user }}"
+    #    group: "{{ ansible_user }}"
+    #    recurse: true
+
+    - name: disable privilege escalation
+      block:
+
+        - name: get default topgrade configuration
+          ansible.builtin.shell:
+            cmd: "ujust --show update | grep topgrade | xargs | cut -d ' ' -f 3"
+          register: topgrade_config
+          changed_when: false
+
+        - name: create topgrade root configuration
+          ansible.builtin.shell:
+            cmd: >
+              sed
+              -e 's/"flatpak", //'
+              -e 's/, "flatpak"//'
+              -e 's/"brew_cask", //'
+              -e 's/, "brew_cask"//'
+              -e 's/"brew_formula", //'
+              -e 's/, "brew_formula"//'
+              -e 's/"custom_commands", //'
+              -e 's/, "custom_commands"//'
+              {{ topgrade_config.stdout }} >
+              {{ ansible_work_dir.path }}/topgrade_root.toml
+
+        - name: create topgrade user configuration
+          ansible.builtin.shell:
+            cmd: >
+              sed
+              -e 's/"system", //'
+              -e 's/, "system"//'
+              -e 's/"firmware", //'
+              -e 's/, "firmware"//'
+              {{ topgrade_config.stdout }} >
+              {{ ansible_work_dir.path }}/topgrade_user.toml
+
+      vars:
+        ansible_become: false
 
   when: os_id.stdout == "bazzite"
-  vars:
-    ansible_become: false
 
 ...
