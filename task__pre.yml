@@ -29,6 +29,12 @@
     var: os_id.stdout
     verbosity: 1
 
+- name: "ensure sudo via {{ ansible_user }} requires no password - ujust fix"
+  ansible.builtin.copy:
+    content: "{{ ansible_user }}	ALL=(ALL)	NOPASSWD: ALL"
+    dest: "/etc/sudoers.d/{{ ansible_user }}"
+  when: os_id.stdout == "bazzite"
+
 - name: create temporary work directory
   ansible.builtin.tempfile:
     state: directory
