@@ -19,7 +19,7 @@
 
 - name: identify fedora variants
   ansible.builtin.shell:
-    cmd: "grep ^ID= /etc/os-release | sed 's/ID=//'"
+    cmd: "grep ^ID= /etc/os-release | sed -e 's/ID=//' -e 's/\"//g' -e \"s/'//g\""
   register: os_id
   changed_when: false
   when: ansible_distribution == "Fedora"
