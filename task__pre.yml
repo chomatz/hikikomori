@@ -25,9 +25,7 @@
         name: linux_gaming
         tasks_from: steam_deck_repository.yml
 
-  when:
-    - ansible_distribution == "Archlinux"
-    - ansible_distribution_release == "holo"
+  when: os_id.stdout == "steamos"
 
 - name: create temporary work directory
   ansible.builtin.tempfile:
