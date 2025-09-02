@@ -1,5 +1,10 @@
 ---
 
+- name: remove temporary work directory
+  ansible.builtin.file:
+    path: "{{ ansible_work_dir.path }}"
+    state: absent
+
 - name: enable steam deck readonly protection
   ansible.builtin.include_role:
     name: linux_gaming
