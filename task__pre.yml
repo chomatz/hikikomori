@@ -1,5 +1,17 @@
 ---
 
+- name: identify os id
+  ansible.builtin.shell:
+    cmd: "grep ^ID= /etc/os-release | sed -e 's/ID=//' -e 's/\"//g' -e \"s/'//g\""
+  register: os_id
+  changed_when: false
+  when: ansible_distribution == "Fedora"
+
+- name: display os id
+  ansible.builtin.debug:
+    var: os_id.stdout
+    verbosity: 1
+
 - name: ensure tasks run only on selected os releases
   block:
 
@@ -16,18 +28,6 @@
   when:
     - ansible_distribution == "Archlinux"
     - ansible_distribution_release == "holo"
-
-- name: identify fedora variants
-  ansible.builtin.shell:
-    cmd: "grep ^ID= /etc/os-release | sed -e 's/ID=//' -e 's/\"//g' -e \"s/'//g\""
-  register: os_id
-  changed_when: false
-  when: ansible_distribution == "Fedora"
-
-- name: display os id
-  ansible.builtin.debug:
-    var: os_id.stdout
-    verbosity: 1
 
 - name: create temporary work directory
   ansible.builtin.tempfile:
