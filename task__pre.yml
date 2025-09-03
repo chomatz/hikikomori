@@ -5,7 +5,6 @@
     cmd: "grep ^ID= /etc/os-release | sed -e 's/ID=//' -e 's/\"//g' -e \"s/'//g\""
   register: os_id
   changed_when: false
-  when: ansible_distribution == "Fedora"
 
 - name: display os id
   ansible.builtin.debug:
