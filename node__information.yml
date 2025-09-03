@@ -26,7 +26,7 @@
 
     - name: display vpn information
       ansible.builtin.debug:
-        var: vpn_wireguard
+        var: wireguard
         verbosity: 0
 
   post_tasks:
