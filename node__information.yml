@@ -1,0 +1,38 @@
+---
+
+- name: info gatherer
+  hosts: "{{ nodes }}"
+
+  pre_tasks:
+
+    - name: source pre-playbook tasks
+      ansible.builtin.include_tasks:
+        file: task__pre.yml
+
+  tasks:
+
+    - name: display os information
+      ansible.builtin.debug:
+        msg: |
+          distro: {{ ansible_distribution }}
+          release: {{ ansible_distribution_release }}
+          variety: {{ ansible_distribution_file_variety }}
+          id: {{ os_id.stdout }}
+
+    - name: display ssh keys
+      ansible.builtin.debug:
+        var: ssh_keypair
+        verbosity: 0
+
+    - name: display vpn information
+      ansible.builtin.debug:
+        var: vpn_wireguard
+        verbosity: 0
+
+  post_tasks:
+
+    - name: source post-playbook tasks
+      ansible.builtin.include_tasks:
+        file: task__post.yml
+
+...
