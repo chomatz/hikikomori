@@ -82,7 +82,7 @@
               vim.opt.expandtab = false
 
               -- terminal setting(s)
-              vim.opt.shell = "bash"
+              vim.opt.shell = "/bin/env bash -l"
           - name: "{{ nvim_dir_home }}/lua/{{ nvim_dir_config }}/lazy.lua"
             data: |
               -- Bootstrap lazy.nvim
