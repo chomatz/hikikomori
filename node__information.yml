@@ -17,7 +17,13 @@
           distro: {{ ansible_distribution }}
           release: {{ ansible_distribution_release }}
           variety: {{ ansible_distribution_file_variety }}
-          id: {{ os_id.stdout }}
+          id1: {{ os_id.stdout }}
+        verbosity: 0
+
+    - name: display os information
+      ansible.builtin.debug:
+        var: ansible_lsb
+        verbosity: 0
 
     - name: display ssh keys
       ansible.builtin.debug:
