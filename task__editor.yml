@@ -223,12 +223,24 @@
                   -- vim-fugitive
                   { "tpope/vim-fugitive" }
               }
+          - name: "{{ nvim_dir_home }}/{{ nvim_dir_ftype }}/bash.lua"
+            data: |
+              vim.opt_local.tabstop = 4
+              vim.opt_local.softtabstop = 0
+              vim.opt_local.shiftwidth = 4
+              vim.opt_local.expandtab = false
           - name: "{{ nvim_dir_home }}/{{ nvim_dir_ftype }}/markdown.lua"
             data: |
               vim.opt_local.tabstop = 2
               vim.opt_local.softtabstop = 2
               vim.opt_local.shiftwidth = 2
               vim.opt_local.expandtab = true
+          - name: "{{ nvim_dir_home }}/{{ nvim_dir_ftype }}/sh.lua"
+            data: |
+              vim.opt_local.tabstop = 4
+              vim.opt_local.softtabstop = 0
+              vim.opt_local.shiftwidth = 4
+              vim.opt_local.expandtab = false
           - name: "{{ nvim_dir_home }}/{{ nvim_dir_ftype }}/yaml.lua"
             data: |
               vim.opt_local.tabstop = 2
