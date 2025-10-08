@@ -11,7 +11,7 @@
 
   tasks:
 
-    - name: display os information
+    - name: display os information - (ansible vars)
       ansible.builtin.debug:
         msg: |
           distro: {{ ansible_distribution }}
@@ -20,7 +20,7 @@
           id1: {{ os_id.stdout }}
         verbosity: 0
 
-    - name: display os information
+    - name: display os information (ansible lsb)
       ansible.builtin.debug:
         var: ansible_lsb
         verbosity: 0
