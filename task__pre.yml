@@ -38,28 +38,33 @@
 - name: bazzite fixes and work arounds
   block:
 
-    # running topgrade as root will cause flatpak updates to fail
-    # for now system and firmware updates are done as root while
-    # flatpak, homebrew, and custom commands are done with user privs
-    # topgrade also requires password input for privilege escalation
-
+    # topgrade requires password input for privilege escalation
+    # ensure that the ansible user requires no password under sudo
     - name: "ensure sudo via {{ ansible_user }} requires no password"
       ansible.builtin.copy:
         content: "{{ ansible_user }}	ALL=(ALL)	NOPASSWD: ALL"
         dest: "/etc/sudoers.d/{{ ansible_user }}"
 
-    - name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
-      ansible.builtin.command:
-        cmd: "chown -R {{ ansible_user }}:{{ ansible_user }} /home/linuxbrew"
+    - name: deploy homebrew ownership fix
+      block:
 
-    #- name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
-    #  ansible.builtin.file:
-    #    path: /home/linuxbrew
-    #    owner: "{{ ansible_user }}"
-    #    group: "{{ ansible_user }}"
-    #    recurse: true
+        - name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
+          ansible.builtin.file:
+            path: /home/linuxbrew
+            owner: "{{ ansible_user }}"
+            group: "{{ ansible_user }}"
+            recurse: true
 
-    - name: disable privilege escalation
+      rescue:
+
+        - name: "ensure /home/linuxbrew is owned by {{ ansible_user }}"
+          ansible.builtin.command:
+            cmd: "chown -R {{ ansible_user }}:{{ ansible_user }} /home/linuxbrew"
+
+    # running topgrade as root will cause flatpak updates to fail
+    # for now system and firmware updates are done as root while
+    # flatpak, homebrew, and custom commands are done with user privs
+    - name: deploy topgrade customization
       block:
 
         - name: get default topgrade configuration
