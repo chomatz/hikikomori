@@ -67,6 +67,6 @@
       vars:
         ansible_become: false
 
-  when: os_id.stdout == "bazzite"
+  when: ansible_distribution == "Bazzite"
 
 ...

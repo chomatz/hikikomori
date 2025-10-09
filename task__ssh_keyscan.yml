@@ -39,6 +39,7 @@
 
   when: >
     (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
+    ansible_distribution == "Bazzite" or
     ansible_distribution == "Fedora"
 
 ...
