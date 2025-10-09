@@ -9,6 +9,14 @@
       ansible.builtin.include_tasks:
         file: task__pre.yml
 
+    - name: source bazzite fixes
+      ansible.builtin.include_tasks:
+        file: task__pre_bazzite_fix.yml
+
+    - name: source steamos tasks
+      ansible.builtin.include_tasks:
+        file: task__pre_steamos.yml
+
     - name: remove rescue kernel(s)
       ansible.builtin.include_role:
         name: boot_loader
