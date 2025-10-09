@@ -13,6 +13,8 @@
         name: linux_gaming
         tasks_from: steam_deck_repository.yml
 
-  when: os_id.stdout == "steamos"
+  when:
+    - ansible_distribution == "Archlinux"
+    - ansible_distribution_release == "holo"
 
 ...
