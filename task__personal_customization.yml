@@ -57,6 +57,46 @@
       loop_control:
         label: "{{ item.name }}"
 
+  when: ansible_distribution == "Fedora"
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: enable flathub repository
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    - name: install personalized application list
+      community.general.flatpak:
+        name: "{{ item.package }}"
+        state: present
+      loop:
+        - name: anydesk
+          package: com.anydesk.Anydesk
+        - name: electrum
+          package: org.electrum.electrum
+        - name: firefox
+          package: org.mozilla.firefox
+        - name: gimp
+          package: org.gimp.GIMP
+        - name: inkscape
+          package: org.inkscape.Inkscape
+        - name: libreoffice
+          package: org.libreoffice.LibreOffice
+        - name: spotify
+          package: com.spotify.Client
+        - name: viber
+          package: com.viber.Viber
+      loop_control:
+        label: "{{ item.name }}"
+
+  when: ansible_distribution == "Bazzite"
+
+- name: ensure tasks run only on selected os releases
+  block:
+
     - name: install steam
       ansible.builtin.include_role:
         name: linux_gaming
