@@ -1,0 +1,89 @@
+---
+
+- name: deploy wireguard
+  ansible.builtin.include_role:
+    name: vpn_tunnel
+    tasks_from: wireguard_deploy.yml
+  vars:
+    hide_secrets: false
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: enable anydesk repository
+      ansible.builtin.yum_repository:
+        name: anydesk
+        description: AnyDesk Fedora - stable
+        file: fedora-anydesk
+        baseurl: http://rpm.anydesk.com/rhel/8/$basearch/
+        gpgkey: https://keys.anydesk.com/repos/RPM-GPG-KEY
+        gpgcheck: true
+        repo_gpgcheck: true
+        metadata_expire: 21600
+
+    - name: enable spotify repository
+      ansible.builtin.command:
+        cmd: dnf config-manager --add-repo=https://negativo17.org/repos/fedora-spotify.repo
+      when:
+        - ansible_distribution_major_version < "41"
+
+    - name: enable spotify repository
+      ansible.builtin.command:
+        cmd: dnf config-manager addrepo --overwrite --from-repofile=https://negativo17.org/repos/fedora-spotify.repo
+      when:
+        - ansible_distribution_major_version >= "41"
+
+    - name: install personalized package list
+      ansible.builtin.package:
+        name: "{{ item.package }}"
+        state: present
+      loop:
+        - name: anydesk
+          package: anydesk
+        - name: electrum
+          package: electrum
+        - name: firefox
+          package: firefox
+        - name: gimp
+          package: gimp
+        - name: inkscape
+          package: inkscape
+        - name: libreoffice
+          package: "@LibreOffice"
+        - name: spotify
+          package: spotify-client
+        - name: viber
+          package: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: install steam
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: steam_install.yml
+
+    - name: allow running steam via sudo
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: steam_sudo.yml
+
+    - name: install xone dongle/gamepad driver
+      ansible.builtin.include_role:
+        name: linux_gaming
+        tasks_from: xone_driver.yml
+
+    - name: install qemu-kvm
+      ansible.builtin.include_role:
+        name: linux_virtualization
+        tasks_from: kvm.yml
+
+    - name: configure kvm bridge on default network interface
+      ansible.builtin.include_role:
+        name: linux_virtualization
+        tasks_from: default_bridge.yml
+      vars:
+        enable_network_bridge: true
+
+  when: ansible_distribution == "Fedora"
+
+...
