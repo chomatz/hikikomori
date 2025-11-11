@@ -6,8 +6,7 @@
   ansible.builtin.lineinfile:
     path: /etc/os-release
     regexp: '^(.*)Bazzite(.*)'
-    line: change_me
-    state: present
+    state: absent
   check_mode: true
   register: bazzite_check
 
