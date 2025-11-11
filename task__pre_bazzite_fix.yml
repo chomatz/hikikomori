@@ -1,5 +1,33 @@
 ---
 
+# dummy task to check if this is a bazzite system
+# "check_mode:" true ensures that /etc/os-release is never modified
+- name: check if this is a bazzite system
+  ansible.builtin.lineinfile:
+    path: /etc/os-release
+    regexp: '^(.*)Bazzite(.*)'
+    line: change_me
+    state: present
+  check_mode: true
+  register: bazzite_check
+
+- name: display bazzite_check result
+  ansible.builtin.debug:
+    var: bazzite_check
+    verbosity: 1
+
+# on bazzite systems ansible_distribution gets confused with
+# the fedora entry in /etc/redhat-release -  so delete it
+- name: remove release aliases
+  ansible.builtin.file:
+    path: "/etc/{{ item }}-release"
+    state: absent
+  loop:
+    - fedora
+    - redhat
+    - system
+  when: bazzite_check.changed
+
 - name: bazzite fixes and work arounds
   block:
 
