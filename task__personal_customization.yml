@@ -77,6 +77,8 @@
           package: com.anydesk.Anydesk
         - name: electrum
           package: org.electrum.electrum
+        - name: ferdium
+          package: org.ferdium.Ferdium
         - name: firefox
           package: org.mozilla.firefox
         - name: gimp
