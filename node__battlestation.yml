@@ -101,6 +101,7 @@
         - name: deploy personal customizations
           ansible.builtin.include_tasks:
             file: task__personal_customization.yml
+          when: personalize
 
       when: >
         (ansible_distribution == "Archlinux" and ansible_distribution_release == "holo") or
