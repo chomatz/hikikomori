@@ -45,7 +45,7 @@
             tasks_from: nerdfont_install.yml
           vars:
             font_name: sauce_code_pro
-            font_url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/SourceCodePro.zip"
+            font_url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/SourceCodePro.tar.xz"
 
         - name: deploy preferred text editor
           ansible.builtin.include_tasks:
