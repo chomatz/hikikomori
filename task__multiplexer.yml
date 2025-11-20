@@ -10,6 +10,9 @@
       vars:
         tmux_config_generator: "/etc/profile.d/tmux_config_generator.sh"
         tmux_custom_config: |
+          # vi style copy and paste
+          setw -g mode-keys vi
+
           # statusline defaults
           set -g status-interval 1
           set -g status-position top
