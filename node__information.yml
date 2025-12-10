@@ -35,6 +35,11 @@
         var: wireguard
         verbosity: 0
 
+    - name: save hostvars to the remote host
+      ansible.builtin.copy:
+        dest: "/tmp/{{ hostvars[inventory_hostname].ansible_fqdn }}.yml"
+        content: "{{ hostvars[inventory_hostname] | to_nice_yaml }}"
+
   post_tasks:
 
     - name: source post-playbook tasks
