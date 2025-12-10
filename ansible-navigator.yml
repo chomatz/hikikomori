@@ -5,11 +5,10 @@ ansible-navigator:
     container-engine: podman
     container-options:
       - "--net=host"
-      - "--env=ANSIBLE_STDOUT_CALLBACK=yaml"
     enabled: true
     environment-variables:
       set:
-        ANSIBLE_CALLBACK_RESULT_FORMAT: yaml
+        ANSIBLE_STDOUT_CALLBACK: yaml
     image: localhost/hikikomori:latest
     pull:
       policy: missing
