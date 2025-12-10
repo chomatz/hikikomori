@@ -4,11 +4,11 @@ ansible-navigator:
   execution-environment:
     container-engine: podman
     container-options:
-      - "--net=host"
+      - "--net=host" # allows the container to make outbound connections
     enabled: true
     environment-variables:
       set:
-        ANSIBLE_STDOUT_CALLBACK: yaml
+        ANSIBLE_STDOUT_CALLBACK: yaml # formats the output of stdout in yaml
     image: localhost/hikikomori:latest
     pull:
       policy: missing
@@ -16,14 +16,9 @@ ansible-navigator:
     level: debug
     append: true
     file: logs/ansible-navigator.log
-  mode: stdout
+  mode: stdout # defaults to stdout - use the '-m interactive' option to override
   playbook-artifact:
-    enable: false
+    enable: false # disables artifacts
     save-as: logs/{playbook_name}-artifact-{time_stamp}.json
-
-# --net=host is set to allow the execution environment to connect via ssh to the container host
-# --env=ANSIBLE_STDOUT_CALLBACK=yaml is set because ansible-navigator ignores it if set under environment-variables
-# 'ANSIBLE_CALLBACK_RESULT_FORMAT: yaml' is set because 'callback_result_format = yaml' is ignored in ansible.cfg
-# playbook-artifact is disabled by default
 
 ...
