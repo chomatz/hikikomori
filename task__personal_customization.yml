@@ -33,7 +33,7 @@
       when:
         - ansible_distribution_major_version >= "41"
 
-    - name: install personalized package list
+    - name: install personalized package list - package manager
       ansible.builtin.package:
         name: "{{ item.package }}"
         state: present
@@ -68,7 +68,7 @@
         state: present
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    - name: install personalized application list
+    - name: install personalized application list - flatpak
       community.general.flatpak:
         name: "{{ item.package }}"
         state: present
