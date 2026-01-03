@@ -96,6 +96,18 @@
       loop_control:
         label: "{{ item.name }}"
 
+    - name: install personalized application list - homebrew
+      community.general.homebrew:
+        name: "{{ item.package }}"
+        state: present
+      loop:
+        - name: git-lfs
+          package: git-lfs
+      loop_control:
+        label: "{{ item.name }}"
+      vars:
+        ansible_become: false
+
   when: ansible_distribution == "Bazzite"
 
 - name: ensure tasks run only on selected os releases
