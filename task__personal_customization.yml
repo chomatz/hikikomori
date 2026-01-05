@@ -87,8 +87,6 @@
           package: org.inkscape.Inkscape
         - name: libreoffice
           package: org.libreoffice.LibreOffice
-        - name: retroarch
-          package: org.libretro.RetroArch
         - name: spotify
           package: com.spotify.Client
         - name: viber
