@@ -52,10 +52,14 @@
           package: "@LibreOffice"
         - name: spotify
           package: spotify-client
-        - name: viber
-          package: https://download.cdn.viber.com/desktop/Linux/viber.rpm
       loop_control:
         label: "{{ item.name }}"
+
+    - name: install viber # this is separated since we need to ignore gpgchecks
+      ansible.builtin.dnf:
+        name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+        state: present
+        disable_gpg_check: true
 
   when: ansible_distribution == "Fedora"
 
