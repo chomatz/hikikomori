@@ -8,7 +8,7 @@ ansible-navigator:
     enabled: true
     environment-variables:
       set:
-        ANSIBLE_STDOUT_CALLBACK: yaml # formats the output of stdout in yaml
+        ANSIBLE_CALLBACK_RESULT_FORMAT: yaml # should format the output of stdout to yaml but it is not supported by ansible-navigator - https://github.com/ansible/ansible-navigator/issues/1765
     image: localhost/hikikomori:latest
     pull:
       policy: missing
