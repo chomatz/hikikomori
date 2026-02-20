@@ -55,11 +55,16 @@
       loop_control:
         label: "{{ item.name }}"
 
-    - name: install viber # this is separated since we need to ignore gpgchecks
+    - name: install personalized package - unsigned # ignore gpgchecks
       ansible.builtin.dnf:
-        name: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+        name: "{{ item.package }}"
         state: present
         disable_gpg_check: true
+      loop:
+        - name: viber
+          package: https://download.cdn.viber.com/desktop/Linux/viber.rpm
+      loop_control:
+        label: "{{ item.name }}"
 
   when: ansible_distribution == "Fedora"
 
