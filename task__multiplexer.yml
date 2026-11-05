@@ -13,6 +13,9 @@
           # vi style copy and paste
           setw -g mode-keys vi
 
+          # disable mouse integration
+          set -g mouse off
+
           # statusline defaults
           set -g status-interval 1
           set -g status-position top
